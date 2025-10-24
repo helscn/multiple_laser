@@ -414,13 +414,9 @@ def findFenquMarker(align_markers:list[Point], threshold:float=5.0):
         return None
 
     BL = align_markers[0]
-    BL_index = 0
     BR = None
-    BR_index = None
     TL = None
-    TL_index = None
     TR = None
-    TR_index = None
     flag = False
 
     # 按照其它点与当前点的距离进行排序
@@ -430,24 +426,19 @@ def findFenquMarker(align_markers:list[Point], threshold:float=5.0):
         point = markers[i]
         if point.x-BL.x > threshold and abs(point.y-BL.y) <= threshold:
             BR = point
-            BR_index = i
             TL = None
-            TL_index = None
-            TL_markers = sorted(markers,key=lambda v:(abs((v.x-BL.x)+abs(v.y-BL.y))))
+
             for i in range(1,len(markers)):
                 # 获取分区左上角对位点
                 point = markers[i]
-                if point.y-BL.y > threshold and abs(point.x-BL.x) <= threshold and i != BR_index:
+                if point.y-BL.y > threshold and abs(point.x-BL.x) <= threshold and point != BR:
                     TL =point
-                    TL_index = i
                     TR = None
-                    TR_index = None
                     for i in range(1,len(markers)):
                         # 获取分区右上角对位点
                         point = markers[i]
-                        if point.x-TL.x > threshold and point.y-BR.y > threshold and abs(point.x-BR.x) <= threshold and abs(point.y-TL.y) <= threshold and i != BR_index and i != TL_index:
+                        if point.x-TL.x > threshold and point.y-BR.y > threshold and abs(point.x-BR.x) <= threshold and abs(point.y-TL.y) <= threshold and point != BR and point != TL:
                             TR = point
-                            TR_index = i
                             flag = True
                             break
                 if flag:
