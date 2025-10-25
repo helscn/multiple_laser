@@ -409,7 +409,6 @@ def findFenquMarker(align_markers:list[Point], threshold:float=5.0):
     threshold 为对位点防呆距离的上限大小
     '''
 
-
     if len(align_markers) == 0:
         return None
 
@@ -419,25 +418,32 @@ def findFenquMarker(align_markers:list[Point], threshold:float=5.0):
     TR = None
     flag = False
 
+    # print("\n分区对位点数：{}".format(len(align_markers)))
+    # print(f"左下角起始点：{BL}")
+
     # 按照其它点与当前点的距离进行排序
-    markers = sorted(align_markers,key=lambda v:(abs((v.x-BL.x)+abs(v.y-BL.y))))
+    markers = sorted(align_markers,key=lambda v:((v.x-BL.x)**2+(v.y-BL.y)**2))
     for i in range(1,len(markers)):
-        # 获取分区右下角对位点
+        # 搜索分区右下角对位点
         point = markers[i]
         if point.x-BL.x > threshold and abs(point.y-BL.y) <= threshold:
+            # print(f"匹配右下角对位点：{point}")
             BR = point
             TL = None
 
-            for i in range(1,len(markers)):
-                # 获取分区左上角对位点
-                point = markers[i]
+            for j in range(1,len(markers)):
+                # 搜索分区左上角对位点
+                point = markers[j]
                 if point.y-BL.y > threshold and abs(point.x-BL.x) <= threshold and point != BR:
+                    # print(f"匹配左上角对位点：{point}")
                     TL =point
                     TR = None
-                    for i in range(1,len(markers)):
-                        # 获取分区右上角对位点
-                        point = markers[i]
+                    for k in range(1,len(markers)):
+                        # 搜索分区右上角对位点
+                        # print(f"搜索右上角对位点：{point}")
+                        point = markers[k]
                         if point.x-TL.x > threshold and point.y-BR.y > threshold and abs(point.x-BR.x) <= threshold and abs(point.y-TL.y) <= threshold and point != BR and point != TL:
+                            # print(f"匹配右上角对位点：{point}")
                             TR = point
                             flag = True
                             break
@@ -446,14 +452,20 @@ def findFenquMarker(align_markers:list[Point], threshold:float=5.0):
         if flag:
             break
     if not flag:
-        raise ValueError('没有找到左下方对位点{}对应的其它分区对位点！'.format(BL))
+        raise ValueError('没有找到左下方{}对位点对应的分区其它位置对位点！请确认分区防反阈值是否大于分区对位点防呆距离！'.format(BL))
 
     # 从原列表中删除已获取的分区对位点
+    # print(f"\n{BL.x},{BL.y}\n{BR.x},{BR.y}\n{TR.x},{TR.y}\n{TL.x},{TL.y}\n{BL.x},{BL.y}")
     result = [BL, BR, TR, TL]
+    points = result.copy()
     for i in range(len(align_markers)-1, -1, -1):
-        if align_markers[i] in result:
-            del align_markers[i]
-
+        if len(points)==0:
+            break
+        for j in range(len(points)-1, -1, -1):
+            if align_markers[i] == points[j]:
+                del points[j]
+                del align_markers[i]
+                break
     return result
 
 def findFenquByMarker(point, fenqus:list[MultipleLaser]):

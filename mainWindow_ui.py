@@ -356,7 +356,7 @@ class Ui_MainWindow(object):
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"\u956d\u5c04\u81ea\u52a8\u5206\u533a\u8f6c\u6362\u7a0b\u5e8f V20251024", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"\u956d\u5c04\u81ea\u52a8\u5206\u533a\u8f6c\u6362\u7a0b\u5e8f V20251025", None))
         self.btnLoadPrg.setText(QCoreApplication.translate("MainWindow", u"\u8f7d\u5165\u6e90\u7a0b\u5e8f...", None))
         self.groupBox.setTitle(QCoreApplication.translate("MainWindow", u"\u53c2\u6570\u8bbe\u7f6e", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"\u5bf9\u4f4d\u70b9\u9632\u53cd\u9608\u503c\uff1a", None))
